@@ -1,5 +1,6 @@
 package es.masanz.junio.controller;
 
+import es.masanz.junio.dao.EditorDBDao;
 import io.javalin.http.Context;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,9 +20,15 @@ public class EditorController {
     public static final String SPRITES_SERVER_FOLDER = "sprites";
     public static final String SPRITES_LOCAL_FOLDER = "src/main/resources/public/"+SPRITES_SERVER_FOLDER;
 
+    public static final String NOMBRE_MAPA = "Ruta 1";
+
+    private EditorDBDao editorDao;
+
     public EditorController(int filas, int columnas){
         this.filas = filas;
         this.columnas = columnas;
+        this.editorDao = new EditorDBDao();
+        this.editorDao.establecerConexion();
     }
 
     public void cargarEditorMapa(Context context) {
@@ -30,7 +37,8 @@ public class EditorController {
         String[] rutasImagenes = cargarSrites();
 
         if(mapa==null){
-            mapa = generarMapaAleatorio(rutasImagenes);
+            mapa = generarMapaVacio();
+            editorDao.consultarMapa(NOMBRE_MAPA, mapa);
         }
 
         model.put("tablero", mapa);
@@ -89,22 +97,21 @@ public class EditorController {
 
     public void colocarSpritePost(Context context) {
 
-        String fila = context.formParam("fila");
-        String columna = context.formParam("columna");
+        int fila = Integer.parseInt(context.formParam("fila"));
+        int columna = Integer.parseInt(context.formParam("columna"));
         String sprite = context.formParam("sprite");
-
-        //ANTES --> url("/sprites/camino_blanco.png")
-        //DESPU -->     /sprites/camino_blanco.png
 
         String[] spriteSpitted = sprite.split("\"");
         if(spriteSpitted.length == 3){
             sprite = spriteSpitted[1];
         }
 
-        mapa[Integer.parseInt(fila)][Integer.parseInt(columna)] = sprite;
+        mapa[fila][columna] = sprite;
 
-
-        //mapa[Integer.valueOf(fila)][Integer.valueOf(columna)] = sprite;
+        boolean haSidoModificado = editorDao.actualizarSprite(NOMBRE_MAPA, fila, columna, sprite);
+        if(!haSidoModificado){
+            editorDao.insertarSprite(NOMBRE_MAPA, fila, columna, sprite);
+        }
 
     }
 

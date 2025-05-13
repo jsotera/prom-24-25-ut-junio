@@ -1,0 +1,67 @@
+.center {
+    text-align: center;
+}
+
+.contenedor {
+    overflow-x: auto;
+}
+
+.galeria {
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+    width: fit-content;
+}
+
+.sprite {
+    border: 1px solid #aaa;
+    border-radius: 4px;
+}
+
+.sprite.seleccionada {
+    border: 3px solid red;
+    scale: 1.1;
+}
+
+.botones {
+    padding: 10px;
+}
+
+.tablero {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tablero > div {
+    border: 1px solid black;
+}
+
+.fila {
+    display: flex;
+}
+
+.show-border .celda {
+    border: 1px solid black;
+}
+
+.tablero.show-border > div {
+    border: 0px solid black;
+}
+
+.celda {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    background-size: cover;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+div.celda .revelado {
+    display: block;
+}
+
+div.celda .sin-tocar {
+    display: block;
+}

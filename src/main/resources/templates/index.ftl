@@ -71,6 +71,7 @@
             var columna = celda.getAttribute('data-columna');
             console.log("pintando sobre ("+fila+", "+columna+")");
             celda.style.backgroundImage = imagenSeleccionada;
+            enviarDatos(fila, columna, imagenSeleccionada);
         };
 
         function mostrarOcultarGrid(boton){
@@ -82,6 +83,16 @@
                 tablero.classList.add("show-border");
                 boton.textContent = "Ocultar grid";
             }
+        }
+
+        function enviarDatos(fila, columna, sprite){
+            fetch("/colocarSprite", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },                
+                body: 'fila='+encodeURIComponent(fila)+'&columna='+encodeURIComponent(columna)+'&sprite='+encodeURIComponent(sprite)
+            });
         }
 
     </script>

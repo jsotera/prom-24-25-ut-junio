@@ -3,6 +3,7 @@ package es.masanz.junio.controller;
 import io.javalin.http.Context;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.*;
@@ -11,6 +12,7 @@ public class EditorController {
 
     private int filas;
     private int columnas;
+    private String[][] mapa;
 
     private static final Logger logger = LogManager.getLogger(EditorController.class);
 
@@ -26,10 +28,12 @@ public class EditorController {
         Map<String, Object> model = new HashMap<>();
 
         String[] rutasImagenes = cargarSrites();
-        //String[][] tablero = generarMapaVacio();
-        String[][] tablero = generarMapaAleatorio(rutasImagenes);
 
-        model.put("tablero", tablero);
+        if(mapa==null){
+            mapa = generarMapaAleatorio(rutasImagenes);
+        }
+
+        model.put("tablero", mapa);
         model.put("imagenes", rutasImagenes);
         context.render("/templates/index.ftl", model);
     }
@@ -81,5 +85,40 @@ public class EditorController {
             }
         }
         return tablero;
+    }
+
+    public void colocarSpritePost(Context context) {
+
+        String fila = context.formParam("fila");
+        String columna = context.formParam("columna");
+        String sprite = context.formParam("sprite");
+
+        //ANTES --> url("/sprites/camino_blanco.png")
+        //DESPU -->     /sprites/camino_blanco.png
+
+        String[] spriteSpitted = sprite.split("\"");
+        if(spriteSpitted.length == 3){
+            sprite = spriteSpitted[1];
+        }
+
+        mapa[Integer.parseInt(fila)][Integer.parseInt(columna)] = sprite;
+
+
+        //mapa[Integer.valueOf(fila)][Integer.valueOf(columna)] = sprite;
+
+    }
+
+    public void colocarSpriteGet(Context context) {
+
+        String fila = context.pathParam("fila");
+        String columna = context.pathParam("columna");
+        String sprite = context.pathParam("sprite");
+
+        System.out.println("ENTRANDO VIA GET");
+
+        System.out.println("fila: "+fila);
+        System.out.println("columna: "+columna);
+        System.out.println("sprite: "+sprite);
+
     }
 }

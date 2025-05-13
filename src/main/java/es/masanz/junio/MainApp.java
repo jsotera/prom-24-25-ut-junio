@@ -23,5 +23,9 @@ public class MainApp {
 
         app.get("/", editorController::cargarEditorMapa);
 
+        app.post("/colocarSprite", editorController::colocarSpritePost);
+
+        // app.get("/colocarSprite/{fila}/{columna}/{sprite}", editorController::colocarSpriteGet);
+
     }
 }

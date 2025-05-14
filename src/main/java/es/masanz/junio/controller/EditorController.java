@@ -20,7 +20,7 @@ public class EditorController {
     public static final String SPRITES_SERVER_FOLDER = "sprites";
     public static final String SPRITES_LOCAL_FOLDER = "src/main/resources/public/"+SPRITES_SERVER_FOLDER;
 
-    public static final String NOMBRE_MAPA = "Ruta 1";
+    public static String NOMBRE_MAPA = "Ruta 1";
 
     private EditorDBDao editorDao;
 
@@ -41,6 +41,7 @@ public class EditorController {
             editorDao.consultarMapa(NOMBRE_MAPA, mapa);
         }
 
+        model.put("mapaSeleccionado", NOMBRE_MAPA);
         model.put("tablero", mapa);
         model.put("imagenes", rutasImagenes);
         context.render("/templates/index.ftl", model);
@@ -127,5 +128,12 @@ public class EditorController {
         System.out.println("columna: "+columna);
         System.out.println("sprite: "+sprite);
 
+    }
+
+    public void seleccionarMapa(Context context) {
+        String mapaEditable = context.formParam("mapaEditable");
+        NOMBRE_MAPA = mapaEditable;
+        mapa = null;
+        context.redirect("/");
     }
 }

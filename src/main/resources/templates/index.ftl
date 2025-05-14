@@ -8,6 +8,25 @@
 </head>
 <body>
     <h1 class="center">Editor de Mapas</h1>
+
+    <div class="selector-rutas center">
+        <form action="/seleccionar-mapa" method="POST">
+            <select name="mapaEditable">
+                <#assign isSelected=""/>
+                <#if mapaSeleccionado=="Ruta 1">
+                    <#assign isSelected="selected"/>
+                </#if>
+                <option ${isSelected} value="Ruta 1">Ruta 1</option>
+                <#assign isSelected=""/>
+                <#if mapaSeleccionado=="javi">
+                    <#assign isSelected="selected"/>
+                </#if>
+                <option ${isSelected} value="javi">javi</option>
+            </select>
+            <input type="submit" value="cambiar">
+        </form>
+    </div>
+    
     <p class="center">Selecciona una imagen y haz clic en una celda para colocarla.</p>
 
     <div class="contenedor">

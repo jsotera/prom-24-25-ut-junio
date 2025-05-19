@@ -1,6 +1,8 @@
 package es.masanz.junio.controller;
 
 import es.masanz.junio.dao.EditorDBDao;
+import es.masanz.junio.dao.MapaDBDao;
+import es.masanz.junio.dto.Mapa;
 import io.javalin.http.Context;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,15 +22,16 @@ public class EditorController {
     public static final String SPRITES_SERVER_FOLDER = "sprites";
     public static final String SPRITES_LOCAL_FOLDER = "src/main/resources/public/"+SPRITES_SERVER_FOLDER;
 
-    public static String NOMBRE_MAPA = "Ruta 1";
+    public static String NOMBRE_MAPA = "";
 
     private EditorDBDao editorDao;
+    private MapaDBDao mapaDao;
 
-    public EditorController(int filas, int columnas){
-        this.filas = filas;
-        this.columnas = columnas;
+    public EditorController(){
         this.editorDao = new EditorDBDao();
         this.editorDao.establecerConexion();
+        this.mapaDao = new MapaDBDao();
+        this.mapaDao.establecerConexion();
     }
 
     public void cargarEditorMapa(Context context) {
@@ -36,11 +39,32 @@ public class EditorController {
 
         String[] rutasImagenes = cargarSrites();
 
-        if(mapa==null){
+        List<Mapa> listadoMapas = mapaDao.consultarMapas();
+
+        if(mapa==null && listadoMapas.size()>0){
+
+            if(NOMBRE_MAPA.isEmpty()){
+                NOMBRE_MAPA = listadoMapas.get(0).getNombre();
+                this.filas = listadoMapas.get(0).getFilas();
+                this.columnas = listadoMapas.get(0).getColumnas();
+            } else {
+                for (Mapa mapa : listadoMapas) {
+                    if(mapa.getNombre().equals(NOMBRE_MAPA)) {
+                        NOMBRE_MAPA = mapa.getNombre();
+                        this.filas = mapa.getFilas();
+                        this.columnas = mapa.getColumnas();
+                    }
+                }
+            }
+
+
             mapa = generarMapaVacio();
             editorDao.consultarMapa(NOMBRE_MAPA, mapa);
         }
 
+
+
+        model.put("mapasListado", listadoMapas);
         model.put("mapaSeleccionado", NOMBRE_MAPA);
         model.put("tablero", mapa);
         model.put("imagenes", rutasImagenes);

@@ -12,16 +12,13 @@
     <div class="selector-rutas center">
         <form action="/seleccionar-mapa" method="POST">
             <select name="mapaEditable">
-                <#assign isSelected=""/>
-                <#if mapaSeleccionado=="Ruta 1">
-                    <#assign isSelected="selected"/>
-                </#if>
-                <option ${isSelected} value="Ruta 1">Ruta 1</option>
-                <#assign isSelected=""/>
-                <#if mapaSeleccionado=="javi">
-                    <#assign isSelected="selected"/>
-                </#if>
-                <option ${isSelected} value="javi">javi</option>
+                <#list mapasListado as mapa>
+                    <#assign isSelected=""/>
+                    <#if mapaSeleccionado==mapa.nombre>
+                        <#assign isSelected="selected"/>
+                    </#if>
+                    <option ${isSelected} value="${mapa.nombre}">${mapa.nombre}</option>
+                </#list>
             </select>
             <input type="submit" value="cambiar">
         </form>

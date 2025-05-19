@@ -6,3 +6,10 @@ CREATE TABLE `prom_junio`.`editor_mapa` (
   `sprite` VARCHAR(200) NOT NULL,
   PRIMARY KEY (`id`))
 COMMENT = '	';
+
+
+CREATE TABLE `prom_junio`.`mapas` (
+  `nombre` VARCHAR(45) NOT NULL,
+  `filas` INT NOT NULL,
+  `columnas` INT NOT NULL,
+  PRIMARY KEY (`nombre`));

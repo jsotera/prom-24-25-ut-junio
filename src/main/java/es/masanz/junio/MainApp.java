@@ -19,7 +19,7 @@ public class MainApp {
             config.fileRenderer(new JavalinFreemarker());
         }).start(4567);
 
-        EditorController editorController = new EditorController(10, 10);
+        EditorController editorController = new EditorController();
 
         app.get("/", editorController::cargarEditorMapa);
 
